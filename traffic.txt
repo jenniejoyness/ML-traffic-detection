@@ -1,0 +1,8 @@
+Weather,Day,Break,Time,Prediction
+cloudy,sunday,no,11:30-13:30,crowded
+sunny,monday,yes,9:30-11:30,crowded
+sunny,monday,yes,9:30-11:30,crowded
+sunny,monday,yes,9:30-11:30,crowded
+sunny,monday,yes,9:30-11:30,crowded
+sunny,monday,yes,9:30-11:30,crowded
+sunny,monday,yes,9:30-11:30,crowded
