@@ -55,7 +55,6 @@ def get_dict_of_att(attributes, dict_att_by_index, training_values):
         dict_of_att[att] = []
         # go over the lines and check for a value - if already saw that
         for line in training_values:
-            line = line[0].split(",")
             value = line[dict_att_by_index[att]]
             # add value to the list of an attribute
             if value not in dict_of_att[att]:

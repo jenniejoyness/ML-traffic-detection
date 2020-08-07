@@ -11,7 +11,7 @@ def user_mode(TCP_IP, TCP_PORT):
     s.connect((TCP_IP, TCP_PORT))
     print("connected")
     # waiting for user input
-    request = b'2 sunny,monday,yes,9:30-11:30\r\n'
+    request = b'2,sunny\tsunday\tno\t11:30-13:30\r\n'
     #todo
     s.sendall(request)
     # receive a string of all file names and info

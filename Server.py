@@ -1,7 +1,6 @@
 import socket
 import get_tree
 import ID3
-from threading import Thread
 
 tree = None
 dict_att_by_index = None
@@ -23,9 +22,9 @@ def add_data(data, c_socket):
 
 # get prediction
 def is_busy(data, c_socket):
-    print("in is busy")
-    tree = None
+
     tree, dict_att_by_index = get_tree.read_files()
+    data = data.split("\r\n")[0].split("\t")
     ans = ID3.get_prediction(tree, data, dict_att_by_index) + "\r\n"
     send_to_client(ans, c_socket)
 
@@ -48,22 +47,20 @@ if an illegal request is made (not 1 or 2) will ignore.
 def request_handler(client_request, c_socket):
 
     client_request = client_request.decode("utf-8")
-    client_request = client_request.split(" ")
+    client_request = client_request.split(",")
     func = switcher.get(client_request[0], illegal_request)
     func(client_request[1], c_socket)
 
 
 def handle_client(c_socket):
     # continue handling client requests until they want to stop
-    while True:
-        data = c_socket.recv(BUFFER_SIZE)
-
-        if not data:
-            break
-        #print(b'new data' +data)
-        print(data)
-        request_handler(data, c_socket)
-        print("handled request")
+    data = c_socket.recv(BUFFER_SIZE)
+    if not data:
+        c_socket.close()
+        return
+    #print(data)
+    request_handler(data, c_socket)
+    #print("handled request")
     c_socket.close()
 
 
@@ -81,14 +78,5 @@ if __name__ == "__main__":
     while True:
         print("Server waiting...")
         c_socket, addr = s.accept()
-
         handle_client(c_socket)
-        # try:
-        #     #client_thread = threading.Thread(target=handle_client(c_socket))
-        #     #client_thread.start()
-        #
-        #     #t = Thread(target=handle_client(c_socket))
-        #     #t.start()
-        #
-        # except:
-        #     print("Error: unable to start thread")
+

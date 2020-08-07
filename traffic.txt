@@ -1,8 +1,14 @@
-Weather,Day,Break,Time,Prediction
-cloudy,sunday,no,11:30-13:30,crowded
-sunny,monday,yes,9:30-11:30,crowded
-sunny,monday,yes,9:30-11:30,crowded
-sunny,monday,yes,9:30-11:30,crowded
-sunny,monday,yes,9:30-11:30,crowded
-sunny,monday,yes,9:30-11:30,crowded
-sunny,monday,yes,9:30-11:30,crowded
+Weather	Day	Break	Time	Prediction
+cloudy	sunday	no	11:30-13:30	crowded
+sunny	monday	yes	9:30-11:30	not-crowded
+cloudy	sunday	no	11:30-13:30	crowded
+cloudy	sunday	no	13:30-15:30	crowded
+sunny	sunday	yes	15:30-17:30	not-crowded
+sunny	sunday	yes	11:30-13:30	crowded
+cloudy	sunday	no	13:30-15:30	not-crowded
+cloudy	sunday	no	11:30-13:30	crowded
+cloudy	sunday	no	13:30-15:30	crowded
+sunny	sunday	yes	15:30-17:30	not-crowded
+sunny	sunday	yes	11:30-13:30	crowded
+cloudy	sunday	no	13:30-15:30	not-crowded
+sunny	sunday	no	11:30-13:30	crowded
