@@ -7,14 +7,14 @@ the prediction.
 
 import copy
 import operator
-
 import math
-
 import Edge
 import Node
 
 
-# returns the entropy of the data
+'''
+returns the entropy of the data
+'''
 def get_entropy(list_of_rows):
     pos = 0
     neg = 0
@@ -35,7 +35,9 @@ def get_entropy(list_of_rows):
     return entropy
 
 
-# returns a dictionary of attributes and their index in the line
+'''
+ returns a dictionary of attributes and their index in the line
+'''
 def get_dict_att_by_index(attributes):
     dict_att_by_index = {}
     i = 0
@@ -45,8 +47,9 @@ def get_dict_att_by_index(attributes):
         i += 1
     return dict_att_by_index
 
-
-# return dict_of_att which is a dictionary of attributes and their possible values
+'''
+return dict_of_att which is a dictionary of attributes and their possible values
+'''
 def get_dict_of_att(attributes, dict_att_by_index, training_values):
     dict_of_att = {}
     # go over all the attributes
@@ -63,8 +66,11 @@ def get_dict_of_att(attributes, dict_att_by_index, training_values):
     return dict_of_att
 
 
-# return dict_of_values which is a dictionary of values of an attribute
-# and a list of the lines that includes that value
+
+'''
+ return dict_of_values which is a dictionary of values of an attribute
+ and a list of the lines that includes that value
+'''
 def get_dict_of_values(training_values, dict_of_att, att, index):
     dict_for_att = {}
     # go over all the values of an attribute
@@ -77,8 +83,10 @@ def get_dict_of_values(training_values, dict_of_att, att, index):
     return dict_for_att
 
 
-# return dict_of_dict which is a dictionary of all the attributes, while the value is dictionary
-# of value and the lines that include this value
+'''
+return dict_of_dict which is a dictionary of all the attributes, while the value is dictionary
+of value and the lines that include this value
+'''
 def get_dict_of_dict(attributes, dict_att_by_index, training_values):
     dict_of_att = get_dict_of_att(attributes, dict_att_by_index, training_values)
     dict_of_dict = {}
@@ -87,7 +95,9 @@ def get_dict_of_dict(attributes, dict_att_by_index, training_values):
     return dict_of_dict
 
 
-# return the average information entropy of an attribute
+'''
+return the average information entropy of an attribute
+'''
 def get_avg_info_entropy(dict_of_dict, att):
     avg_info_entropy = 0
     # rows_len_of_att is the length of the list of lines of current data table
@@ -102,7 +112,9 @@ def get_avg_info_entropy(dict_of_dict, att):
     return avg_info_entropy
 
 
-# check the majority of the classification
+'''
+ check the majority of the classification
+'''
 def majority_classification(lines):
     yes, no = 0, 0
     # go over all the lines
@@ -117,7 +129,9 @@ def majority_classification(lines):
         return "not-crowded"
 
 
-# check if all the data classification is the same
+'''
+check if all the data classification is the same
+'''
 def check_all_same(lines):
     yes, no = 0, 0
     # go over all the lines
@@ -137,15 +151,18 @@ def check_all_same(lines):
         return "not same"
 
 
-# returns the Edge of a value
+'''
+ returns the Edge of a value
+'''
 def get_edge(values, value):
     # go over all the values of an attribute
     for edge in values:
         if edge.value_name == value:
             return edge
 
-
-# returns the prediction of a test line according to the tree received by DTL in a recursive function
+'''
+ returns the prediction of a test line according to the tree received by DTL in a recursive function
+'''
 def get_prediction(tree, test_line, dict_att_by_index):
     # if got to a leaf - return its classification
     if tree.values is None:
@@ -155,7 +172,9 @@ def get_prediction(tree, test_line, dict_att_by_index):
     return get_prediction(next_node, test_line, dict_att_by_index)
 
 
-# write all the nodes of the tree to a file in a recursive function
+'''
+write all the nodes of the tree to a file in a recursive function
+'''
 def write_node(file, node, is_root, tab_num):
     # if the node is a leaf - write its classification
     if node.values is None:
@@ -171,20 +190,25 @@ def write_node(file, node, is_root, tab_num):
         write_node(file, value.next, False, tab_num)
 
 
-# write to file the tree of the data
+'''
+write to file the tree of the data
+'''
 def write_to_file(root):
     f = open("tree.txt", "w")
     write_node(f, root, True, 0)
     f.close()
 
 
-# return the attribute with the highest gain
+'''
+return the attribute with the highest gain
+'''
 def choose_att_by_max_gain(gain_dict):
     return max(gain_dict.items(), key=operator.itemgetter(1))[0]
 
-
-# the function calculate the entropy of all the attributes and their gain
-# and returns the attribute with the highest gain
+'''
+ the function calculate the entropy of all the attributes and their gain
+  and returns the attribute with the highest gain
+'''
 def ID3(lines, attributes, dict_att_by_index):
     # calculate the entropy of all the lines - S_entropy
     s_entropy = get_entropy(lines)
@@ -195,7 +219,10 @@ def ID3(lines, attributes, dict_att_by_index):
     return choose_att_by_max_gain(gain_dict)
 
 
-# the function build the tree
+
+'''
+the function build the tree
+'''
 def DTL(data_lines, attributes, dict_att_by_index, dict_of_att, default_classification="crowded"):
     # if there is no data - return a node with default classification
     if not data_lines:
@@ -234,8 +261,9 @@ def DTL(data_lines, attributes, dict_att_by_index, dict_of_att, default_classifi
         edge.next = sub_tree
     return tree
 
-
-# the function run the decision tree class - ID3
+'''
+the function run the decision tree class - ID3
+'''
 def run_ID3(training_values, attributes, dict_att_by_index):
     dict_of_att = get_dict_of_att(attributes, dict_att_by_index, training_values)
     # call the DTL function to receive the tree

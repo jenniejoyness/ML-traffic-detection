@@ -6,36 +6,45 @@ tree = None
 dict_att_by_index = None
 file_name = "traffic.txt"
 
-
+'''
+ send message to client with c_socket parameter
+'''
 def send_to_client(message, c_socket):
     c_socket.send(message.encode("utf-8"))
 
 
+'''
+adding new data to the training file 
+'''
 def add_data(data, c_socket):
-    #print(b'data:' +data)
-
     file = open(file_name, 'a+')
     data = data.split("\r\n")
     file.write(data[0] + '\n')
 
 
 
-# get prediction
-def is_busy(data, c_socket):
 
+'''
+ return the prediction to the client by calling the  get_prediction function in ID3 class
+ before returning prediction updating the tree with all the new that has been added
+'''
+def return_prediction(data, c_socket):
     tree, dict_att_by_index = get_tree.read_files()
+    # need to send data as list to get_prediction function
     data = data.split("\r\n")[0].split("\t")
     ans = ID3.get_prediction(tree, data, dict_att_by_index) + "\r\n"
     send_to_client(ans, c_socket)
 
-
+'''
+clients input was illegal
+'''
 def illegal_request(data, client_addr):
-    return 'blah'
+    print("Illegal request sent to server")
 
 
 switcher = {
     "1": add_data,
-    "2": is_busy
+    "2": return_prediction
 }
 
 '''
@@ -52,20 +61,27 @@ def request_handler(client_request, c_socket):
     func(client_request[1], c_socket)
 
 
+'''
+ server reads request from socket and handles accordingly
+ request with number 1 - is to add data to the tree
+ request with number 2 - get prediction for new data
+'''
 def handle_client(c_socket):
-    # continue handling client requests until they want to stop
     data = c_socket.recv(BUFFER_SIZE)
     if not data:
         c_socket.close()
         return
-    #print(data)
     request_handler(data, c_socket)
-    #print("handled request")
     c_socket.close()
 
 
+'''
+ the main function trains the ID3 tree model and
+ opens server to handle clients requests
+'''
 if __name__ == "__main__":
 
+    # get the tree that has been built with data in the training file
     tree, dict_att_by_index = get_tree.read_files()
 
     TCP_IP = '0.0.0.0'
@@ -76,7 +92,7 @@ if __name__ == "__main__":
     s.listen(10)
     # handling client requests
     while True:
-        print("Server waiting...")
+        print("Server waiting for new clients request...")
         c_socket, addr = s.accept()
         handle_client(c_socket)
 
