@@ -21,7 +21,7 @@ def user_mode(TCP_IP, TCP_PORT):
 
 if __name__ == "__main__":
 
-    #TCP_IP = '52.201.126.29'
-    TCP_IP = '127.0.0.1'
+    TCP_IP = '52.201.126.29'
+    #TCP_IP = '127.0.0.1'
     TCP_PORT = 3001
     user_mode(TCP_IP, TCP_PORT)

@@ -23,6 +23,7 @@ def send_to_client(message, c_socket):
 
 '''
 Adding new data to the training file.
+Then updating the tree with the new data.
 '''
 
 
@@ -30,17 +31,17 @@ def add_data(data, c_socket):
     file = open(file_name, 'a+')
     data = data.split("\r\n")
     file.write(data[0] + '\n')
+    # update tree
+    global tree, dict_att_by_index
+    tree, dict_att_by_index = get_tree.read_files()
 
 
 '''
-Before returning the prediction the tree needs to be updated with all the new data that has been added so far.
-Then return the prediction to the client by calling the get_prediction function in ID3 class.
+Return the prediction to the client by calling the get_prediction function in ID3 class.
 '''
 
 
 def return_prediction(data, c_socket):
-    # update tree
-    tree, dict_att_by_index = get_tree.read_files()
     # need to send data as list to get_prediction function
     data = data.split("\r\n")[0].split("\t")
     ans = ID3.get_prediction(tree, data, dict_att_by_index) + "\r\n"
