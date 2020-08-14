@@ -1,6 +1,6 @@
 """
-Reads the file_name file and splits into rows of data
-the class finds all the attributes in the file and their values
+Reads the file and splits into rows of data.
+The class finds all the attributes in the file and their values.
 """
 
 import ID3
@@ -8,8 +8,10 @@ import ID3
 file_name = "traffic.txt"
 
 '''
-returns a dictionary of attributes and their index in the line
+Returns a dictionary of attributes and their index in the line.
 '''
+
+
 def get_dict_att_by_index(attributes):
     dict_att_by_index = {}
     i = 0
@@ -21,9 +23,10 @@ def get_dict_att_by_index(attributes):
 
 
 '''
-receive a list of lines of data as one string and return list of list of
- strings of each line
+Receive a list of lines of data as one string and return list of list of strings of each line.
 '''
+
+
 def get_values(lines):
     values = []
     for line in lines:
@@ -35,8 +38,10 @@ def get_values(lines):
 
 
 '''
-write all the conclusions to a file
+Write all the conclusions to a file.
 '''
+
+
 def write_to_file(root, acc_id3, acc_knn, acc_nb):
     f = open("output.txt", "w")
     ID3.write_node(f, root, True, 0)
@@ -44,10 +49,13 @@ def write_to_file(root, acc_id3, acc_knn, acc_nb):
     f.write(str("%.2f" % acc_id3) + "\t" + str("%.2f" % acc_knn) + "\t" + str("%.2f" % acc_nb))
     f.close()
 
+
 '''
-create the train data and the test data
- returns the ID3 tree
+Create the train data and the test data.
+Returns the ID3 tree.
 '''
+
+
 def read_files():
     train_file_name = file_name
     lines_train = []
@@ -63,7 +71,7 @@ def read_files():
     # test_values = get_values(lines_test[1:])
     # gets the tree from the ID3 to get the classifications
     tree = ID3.run_ID3(training_values, attributes, dict_att_by_index)
-    #ID3.write_to_file(tree)
+    # ID3.write_to_file(tree)
     return tree, dict_att_by_index
 
 

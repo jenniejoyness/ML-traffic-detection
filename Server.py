@@ -1,3 +1,9 @@
+"""
+This class runs the server.
+Server handles clients requests to add new information to ID3 tree or gets the prediction if the shuttle is crowded
+or not.
+"""
+
 import socket
 import get_tree
 import ID3
@@ -7,37 +13,45 @@ dict_att_by_index = None
 file_name = "traffic.txt"
 
 '''
- send message to client with c_socket parameter
+Send message to client with c_socket parameter.
 '''
+
+
 def send_to_client(message, c_socket):
     c_socket.send(message.encode("utf-8"))
 
 
 '''
-adding new data to the training file 
+Adding new data to the training file.
 '''
+
+
 def add_data(data, c_socket):
     file = open(file_name, 'a+')
     data = data.split("\r\n")
     file.write(data[0] + '\n')
 
 
+'''
+Before returning the prediction the tree needs to be updated with all the new data that has been added so far.
+Then return the prediction to the client by calling the get_prediction function in ID3 class.
+'''
 
 
-'''
- return the prediction to the client by calling the  get_prediction function in ID3 class
- before returning prediction updating the tree with all the new that has been added
-'''
 def return_prediction(data, c_socket):
+    # update tree
     tree, dict_att_by_index = get_tree.read_files()
     # need to send data as list to get_prediction function
     data = data.split("\r\n")[0].split("\t")
     ans = ID3.get_prediction(tree, data, dict_att_by_index) + "\r\n"
     send_to_client(ans, c_socket)
 
+
 '''
-clients input was illegal
+Client's input was illegal.
 '''
+
+
 def illegal_request(data, client_addr):
     print("Illegal request sent to server")
 
@@ -48,13 +62,13 @@ switcher = {
 }
 
 '''
-send to the correct handler.
-if an illegal request is made (not 1 or 2) will ignore.
+Send to the correct function to handle the client's request.
+Request with the number 1 - is to add data to the tree.
+Request with the number 2 - is to get prediction for new data.
 '''
 
 
 def request_handler(client_request, c_socket):
-
     client_request = client_request.decode("utf-8")
     client_request = client_request.split(",")
     func = switcher.get(client_request[0], illegal_request)
@@ -62,10 +76,10 @@ def request_handler(client_request, c_socket):
 
 
 '''
- server reads request from socket and handles accordingly
- request with number 1 - is to add data to the tree
- request with number 2 - get prediction for new data
+Server reads data from socket and handles accordingly.
 '''
+
+
 def handle_client(c_socket):
     data = c_socket.recv(BUFFER_SIZE)
     if not data:
@@ -76,8 +90,7 @@ def handle_client(c_socket):
 
 
 '''
- the main function trains the ID3 tree model and
- opens server to handle clients requests
+The main function trains the ID3 tree model and opens server to handle clients requests.
 '''
 if __name__ == "__main__":
 
@@ -95,4 +108,3 @@ if __name__ == "__main__":
         print("Server waiting for new clients request...")
         c_socket, addr = s.accept()
         handle_client(c_socket)
-
